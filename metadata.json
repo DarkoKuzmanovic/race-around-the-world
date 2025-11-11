@@ -1,0 +1,5 @@
+{
+  "name": "Race Around The World",
+  "description": "A 2-player trivia game where players race across the globe by answering questions about different countries. The first to reach the destination wins!",
+  "requestFramePermissions": []
+}
