@@ -7,6 +7,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Race Around The World</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Mega:wght@100..900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'neo-black': '#000000',
+              'neo-white': '#ffffff',
+              'neo-yellow': '#FFDE00',
+              'neo-red': '#FF4D4D',
+              'neo-blue': '#54a0ff',
+              'neo-green': '#2ecc71',
+              'neo-purple': '#a55eea',
+            },
+            fontFamily: {
+              'neo-display': ['"Lexend Mega"', 'sans-serif'],
+              'neo-body': ['"Space Mono"', 'monospace'],
+            },
+            boxShadow: {
+              'neo': '4px 4px 0px 0px rgba(0,0,0,1)',
+              'neo-sm': '2px 2px 0px 0px rgba(0,0,0,1)',
+              'neo-lg': '8px 8px 0px 0px rgba(0,0,0,1)',
+            },
+            borderWidth: {
+              'neo': '3px',
+            }
+          }
+        }
+      }
+    </script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://d3js.org/topojson.v3.min.js"></script>
   <script type="importmap">
@@ -21,7 +53,7 @@
 </script>
 <link rel="stylesheet" href="/index.css">
 </head>
-  <body class="bg-gray-900 text-white">
+  <body class="bg-neo-yellow text-neo-black font-neo-body selection:bg-neo-black selection:text-neo-white">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

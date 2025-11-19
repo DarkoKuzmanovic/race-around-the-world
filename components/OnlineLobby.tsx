@@ -83,81 +83,103 @@ export const OnlineLobby: React.FC<OnlineLobbyProps> = ({
   }, [roomCode]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white p-6 flex items-center">
+    <div className="min-h-screen flex items-center justify-center p-6">
       <div className="w-full max-w-5xl mx-auto">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-8">
           <button
             onClick={onBackToLanding}
-            className="text-sm text-slate-400 hover:text-slate-100 transition-colors w-fit"
+            className="text-sm font-bold uppercase tracking-widest hover:underline decoration-2 underline-offset-4"
           >
             ← Change mode
           </button>
-          <div>
-            <p className="text-sm uppercase tracking-[0.4em] text-sky-400">Online Rooms</p>
-            <h1 className="text-3xl md:text-4xl font-bold mt-1">Challenge a friend anywhere</h1>
+          <div className="text-center">
+            <p className="text-sm font-bold uppercase tracking-[0.4em] bg-neo-black text-neo-white inline-block px-2 py-1">Online Rooms</p>
+            <h1 className="text-4xl font-neo-display font-bold uppercase mt-2">Challenge a friend</h1>
           </div>
-          <div className="flex items-center gap-2 text-sm text-slate-400">
-            <span className={`w-2.5 h-2.5 rounded-full ${isConnected ? 'bg-emerald-400' : 'bg-slate-600'}`}></span>
-            {isConnected ? 'Realtime link live' : 'Connecting...'}
+          <div className="flex items-center gap-2 text-sm font-bold uppercase border-2 border-neo-black px-3 py-1 bg-neo-white shadow-neo-sm">
+            <span className={`w-3 h-3 border-2 border-neo-black ${isConnected ? 'bg-neo-green' : 'bg-neo-red'}`}></span>
+            {isConnected ? 'Live' : 'Connecting...'}
           </div>
         </div>
 
+        {!isConnected && (
+          <div className="mb-8 bg-neo-yellow border-4 border-neo-black p-4 text-center shadow-neo-sm animate-pulse">
+            <p className="font-bold uppercase text-neo-black text-lg">⚠️ Server Disconnected</p>
+            <p className="text-sm font-neo-body mt-2 font-bold">
+              Multiplayer requires the backend server.
+            </p>
+            <p className="text-xs mt-2">
+              Run <code className="bg-neo-black text-neo-white px-2 py-1 font-mono">npm run dev:full</code> to start both.
+            </p>
+          </div>
+        )}
+
         {!roomCode && (
-          <div className="grid gap-6 md:grid-cols-2 mt-10">
-            <div className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6">
-              <h2 className="text-2xl font-semibold">Create a room</h2>
-              <p className="text-slate-400 text-sm mt-2">Share the invite code with a single friend. Rooms hold two racers.</p>
-              <label className="block text-sm text-slate-300 mt-5">Display name</label>
+          <div className="grid gap-8 md:grid-cols-2">
+            <div className="neo-card relative">
+              <div className="absolute -top-3 -left-3 bg-neo-blue border-2 border-neo-black px-3 py-1 font-bold uppercase transform -rotate-2 shadow-neo-sm text-neo-white">
+                Host
+              </div>
+              <h2 className="text-2xl font-neo-display font-bold uppercase mt-4">Create a room</h2>
+              <p className="font-neo-body text-sm mt-2 mb-6 border-b-2 border-neo-black pb-4">Share the invite code with a friend.</p>
+
+              <label className="block text-sm font-bold uppercase mb-2">Display name</label>
               <input
                 value={hostName}
                 onChange={(e) => setHostName(e.target.value)}
                 placeholder="Amelia"
-                className="w-full mt-2 bg-slate-900 border border-slate-700 rounded-xl p-3 focus:ring-2 focus:ring-sky-500 focus:outline-none"
+                className="neo-input mb-6"
               />
               <button
                 onClick={handleCreate}
-                className="mt-5 w-full bg-gradient-to-r from-sky-500 to-cyan-400 text-white font-semibold py-3 rounded-xl hover:from-sky-400 hover:to-cyan-300 transition-colors"
+                disabled={!isConnected}
+                className={`neo-btn neo-btn-primary w-full ${!isConnected ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
-                Create room
+                {isConnected ? 'Create room' : 'Connecting...'}
               </button>
             </div>
 
-            <div className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6">
-              <h2 className="text-2xl font-semibold">Join with a code</h2>
-              <p className="text-slate-400 text-sm mt-2">Paste the 5-character code your friend shares with you.</p>
-              <label className="block text-sm text-slate-300 mt-5">Invite code</label>
+            <div className="neo-card relative">
+              <div className="absolute -top-3 -right-3 bg-neo-red border-2 border-neo-black px-3 py-1 font-bold uppercase transform rotate-2 shadow-neo-sm text-neo-white">
+                Join
+              </div>
+              <h2 className="text-2xl font-neo-display font-bold uppercase mt-4">Join with code</h2>
+              <p className="font-neo-body text-sm mt-2 mb-6 border-b-2 border-neo-black pb-4">Enter the 5-character code.</p>
+
+              <label className="block text-sm font-bold uppercase mb-2">Invite code</label>
               <input
                 value={joinCode}
                 onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
                 placeholder="ABCDE"
-                className="w-full mt-2 bg-slate-900 border border-slate-700 rounded-xl p-3 uppercase tracking-widest focus:ring-2 focus:ring-sky-500 focus:outline-none"
+                className="neo-input mb-4 uppercase tracking-widest font-mono"
               />
-              <label className="block text-sm text-slate-300 mt-4">Display name</label>
+              <label className="block text-sm font-bold uppercase mb-2">Display name</label>
               <input
                 value={joinName}
                 onChange={(e) => setJoinName(e.target.value)}
                 placeholder="Ibn Battuta"
-                className="w-full mt-2 bg-slate-900 border border-slate-700 rounded-xl p-3 focus:ring-2 focus:ring-sky-500 focus:outline-none"
+                className="neo-input mb-6"
               />
               <button
                 onClick={handleJoin}
-                className="mt-5 w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold py-3 rounded-xl hover:from-purple-400 hover:to-pink-400 transition-colors"
+                disabled={!isConnected}
+                className={`neo-btn neo-btn-secondary w-full ${!isConnected ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
-                Join room
+                {isConnected ? 'Join room' : 'Connecting...'}
               </button>
             </div>
           </div>
         )}
 
         {roomCode && (
-          <div className="mt-10 bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="neo-card">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between border-b-4 border-neo-black pb-6 mb-6">
               <div>
-                <p className="text-sm text-slate-400">Invite code</p>
-                <div className="flex items-center gap-3 mt-1">
-                  <span className="text-3xl font-mono tracking-[0.4em]">{roomCode}</span>
+                <p className="text-sm font-bold uppercase tracking-widest mb-2">Invite code</p>
+                <div className="flex items-center gap-4">
+                  <span className="text-4xl font-mono font-bold tracking-[0.2em] bg-neo-yellow border-2 border-neo-black px-4 py-2 shadow-neo-sm">{roomCode}</span>
                   <button
-                    className="text-sm text-sky-300 hover:text-sky-200"
+                    className="text-sm font-bold uppercase hover:underline decoration-2 underline-offset-4"
                     onClick={() => navigator.clipboard?.writeText(roomCode)}
                   >
                     Copy
@@ -166,76 +188,81 @@ export const OnlineLobby: React.FC<OnlineLobbyProps> = ({
               </div>
               <button
                 onClick={onLeaveRoom}
-                className="text-sm text-slate-400 hover:text-rose-300"
+                className="text-sm font-bold uppercase text-neo-red hover:bg-neo-red hover:text-neo-white border-2 border-neo-red px-4 py-2 transition-colors"
               >
                 Leave room
               </button>
             </div>
 
-            <div className="mt-8 grid gap-4 md:grid-cols-2">
+            <div className="grid gap-6 md:grid-cols-2 mb-8">
               {players.map((player) => (
                 <div
                   key={player.id}
-                  className="bg-slate-950/60 border border-slate-800 rounded-xl p-4 flex items-center justify-between"
+                  className="border-2 border-neo-black p-4 flex items-center justify-between bg-neo-white shadow-neo-sm"
                 >
                   <div>
-                    <p className="text-sm uppercase tracking-widest text-slate-400">{player.role === 'host' ? 'Host' : 'Guest'}</p>
-                    <p className="text-xl font-semibold">{player.name}</p>
+                    <p className="text-xs font-bold uppercase tracking-widest mb-1 bg-neo-black text-neo-white inline-block px-1">{player.role === 'host' ? 'Host' : 'Guest'}</p>
+                    <p className="text-xl font-bold">{player.name}</p>
                   </div>
-                  <span className="text-xs text-slate-500">#{player.id.slice(-4)}</span>
+                  <span className="text-xs font-mono border-2 border-neo-black px-2 py-1">#{player.id.slice(-4)}</span>
                 </div>
               ))}
               {players.length < 2 && (
-                <div className="bg-slate-950/40 border border-dashed border-slate-700 rounded-xl p-4 flex items-center justify-center text-slate-500 text-sm">
+                <div className="border-2 border-dashed border-neo-black p-4 flex items-center justify-center font-bold uppercase text-gray-500 bg-gray-100">
                   Waiting for another player…
                 </div>
               )}
             </div>
 
             {playerRole === 'host' ? (
-              <div className="mt-8 grid gap-4 md:grid-cols-2">
+              <div className="grid gap-6 md:grid-cols-2 mb-8 border-t-4 border-neo-black pt-6">
                 <div>
-                  <label className="block text-sm text-slate-300">Start city</label>
-                  <select
-                    value={startLocation}
-                    onChange={(e) => setStartLocation(e.target.value)}
-                    className="mt-2 w-full bg-slate-950/60 border border-slate-800 rounded-xl p-3 focus:ring-2 focus:ring-sky-500"
-                  >
-                    {LOCATIONS.map((loc) => (
-                      <option key={loc.name} value={loc.name}>
-                        {loc.name}
-                      </option>
-                    ))}
-                  </select>
+                  <label className="block text-sm font-bold uppercase mb-2">Start city</label>
+                  <div className="relative">
+                    <select
+                      value={startLocation}
+                      onChange={(e) => setStartLocation(e.target.value)}
+                      className="neo-input appearance-none cursor-pointer"
+                    >
+                      {LOCATIONS.map((loc) => (
+                        <option key={loc.name} value={loc.name}>
+                          {loc.name}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none font-bold">▼</div>
+                  </div>
                 </div>
                 <div>
-                  <label className="block text-sm text-slate-300">Destination</label>
-                  <select
-                    value={endLocation}
-                    onChange={(e) => setEndLocation(e.target.value)}
-                    className="mt-2 w-full bg-slate-950/60 border border-slate-800 rounded-xl p-3 focus:ring-2 focus:ring-sky-500"
-                  >
-                    {LOCATIONS.map((loc) => (
-                      <option key={loc.name} value={loc.name}>
-                        {loc.name}
-                      </option>
-                    ))}
-                  </select>
+                  <label className="block text-sm font-bold uppercase mb-2">Destination</label>
+                  <div className="relative">
+                    <select
+                      value={endLocation}
+                      onChange={(e) => setEndLocation(e.target.value)}
+                      className="neo-input appearance-none cursor-pointer"
+                    >
+                      {LOCATIONS.map((loc) => (
+                        <option key={loc.name} value={loc.name}>
+                          {loc.name}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none font-bold">▼</div>
+                  </div>
                 </div>
               </div>
             ) : (
-              <p className="mt-8 text-slate-400 text-sm">Waiting for the host to configure the route…</p>
+              <p className="text-center font-bold uppercase animate-pulse border-t-4 border-neo-black pt-6">Waiting for the host to configure the route…</p>
             )}
 
             {playerRole === 'host' && (
               <button
                 disabled={!canLaunch || isLaunching}
                 onClick={handleLaunch}
-                className={`mt-8 w-full py-4 rounded-xl font-semibold text-lg transition-colors ${
-                  canLaunch
-                    ? 'bg-gradient-to-r from-emerald-500 to-lime-400 text-slate-950'
-                    : 'bg-slate-800 text-slate-500 cursor-not-allowed'
-                }`}
+                className={`w-full py-4 font-neo-display font-bold uppercase text-xl border-2 border-neo-black shadow-neo transition-all ${canLaunch
+                  ? 'bg-neo-green text-neo-black hover:bg-neo-black hover:text-neo-white active:translate-x-[2px] active:translate-y-[2px] active:shadow-none'
+                  : 'bg-gray-200 text-gray-400 cursor-not-allowed shadow-none'
+                  }`}
               >
                 {isLaunching ? 'Starting…' : 'Launch the race'}
               </button>
@@ -244,7 +271,7 @@ export const OnlineLobby: React.FC<OnlineLobbyProps> = ({
         )}
 
         {(formError || statusMessage) && (
-          <div className="mt-6 text-center text-sm text-rose-300">
+          <div className="mt-6 text-center font-bold uppercase bg-neo-red text-neo-white p-2 border-2 border-neo-black shadow-neo-sm mx-auto max-w-md">
             {formError || statusMessage}
           </div>
         )}

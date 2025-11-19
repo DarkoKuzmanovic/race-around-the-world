@@ -1,10 +1,6 @@
 # 🌍 Race Around The World
 
-An interactive two-player trivia game where players race across the globe answering AI-generated questions about history, geography, and culture — now with a refreshed UI and shareable online rooms powered by Socket.IO.
-
-[![View in AI Studio](https://img.shields.io/badge/AI_Studio-View_App-blue)](https://ai.studio/apps/drive/1H0bgtPglK6o-h5vIjf9lmeDnHx749nOL)
-
-</div>
+An interactive two-player trivia game where players race across the globe answering AI-generated questions about history, geography, and culture — now featuring a bold **Neobrutalism** design and shareable online rooms powered by Socket.IO.
 
 ## 🎮 Game Overview
 

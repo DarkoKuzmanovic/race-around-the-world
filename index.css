@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply antialiased;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-neo-white border-l-neo border-neo-black;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-neo-black border-neo border-neo-white;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-neo-red;
+  }
+}
+
+@layer components {
+  .neo-btn {
+    @apply px-6 py-3 bg-neo-white border-4 border-neo-black shadow-neo font-neo-display font-bold uppercase tracking-wider transition-all active:translate-x-[2px] active:translate-y-[2px] active:shadow-none hover:bg-neo-blue hover:text-neo-white;
+  }
+
+  .neo-btn-primary {
+    @apply bg-neo-red text-neo-white hover:bg-neo-black hover:text-neo-white;
+  }
+
+  .neo-btn-secondary {
+    @apply bg-neo-green text-neo-black hover:bg-neo-black hover:text-neo-white;
+  }
+
+  .neo-input {
+    @apply w-full px-4 py-3 bg-neo-white border-4 border-neo-black shadow-neo font-neo-body focus:outline-none focus:ring-0 focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none transition-all;
+  }
+
+  .neo-card {
+    @apply bg-neo-white border-4 border-neo-black shadow-neo p-8;
+  }
+
+  .neo-modal {
+    @apply fixed inset-0 flex items-center justify-center z-50 p-4 bg-neo-black/50 backdrop-blur-sm;
+  }
+
+  .neo-modal-content {
+    @apply bg-neo-white border-4 border-neo-black shadow-neo-lg p-8 max-w-2xl w-full relative animate-[bounce_0.5s_ease-out];
+  }
+}

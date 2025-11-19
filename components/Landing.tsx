@@ -24,39 +24,43 @@ const cards: Array<{ mode: GameMode; title: string; description: string; highlig
 
 export const Landing: React.FC<LandingProps> = ({ onSelectMode }) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white flex items-center">
-      <div className="w-full max-w-5xl mx-auto px-6 py-10">
-        <div className="text-center space-y-4">
-          <p className="text-sm uppercase tracking-[0.4em] text-sky-400">Race Around The World</p>
-          <h1 className="text-4xl md:text-5xl font-bold">Choose how you want to race</h1>
-          <p className="text-lg text-slate-300 max-w-3xl mx-auto">
+    <div className="min-h-screen flex items-center justify-center p-6">
+      <div className="w-full max-w-5xl mx-auto">
+        <div className="text-center space-y-6 mb-16">
+          <p className="text-sm font-bold uppercase tracking-[0.4em] bg-neo-black text-neo-white inline-block px-2 py-1">Race Around The World</p>
+          <h1 className="text-5xl md:text-7xl font-neo-display font-bold uppercase leading-none tracking-tighter">
+            Choose Your<br />Race Mode
+          </h1>
+          <p className="text-xl font-neo-body max-w-2xl mx-auto border-2 border-neo-black p-4 bg-neo-white shadow-neo-sm">
             Lean into couch co-op or send a room code to challenge a friend anywhere on the planet.
           </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 mt-12">
+        <div className="grid gap-8 md:grid-cols-2">
           {cards.map((card) => (
             <button
               key={card.mode}
               onClick={() => onSelectMode(card.mode)}
-              className="group text-left bg-slate-900/80 border border-slate-800 rounded-2xl p-6 hover:border-sky-500 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+              className="group text-left neo-card hover:bg-neo-blue hover:text-neo-white transition-all relative top-0 hover:-top-1 p-8"
             >
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-semibold">{card.title}</h2>
-                <span className="text-sm uppercase tracking-widest text-slate-400">{card.mode === 'local' ? 'Offline' : 'Online'}</span>
+              <div className="flex items-center justify-between mb-4 border-b-4 border-neo-black pb-2 group-hover:border-neo-white">
+                <h2 className="text-3xl font-neo-display font-bold uppercase">{card.title}</h2>
+                <span className="text-xs font-bold uppercase tracking-widest bg-neo-black text-neo-white px-2 py-1 group-hover:bg-neo-white group-hover:text-neo-black border-2 border-transparent group-hover:border-neo-black">
+                  {card.mode === 'local' ? 'Offline' : 'Online'}
+                </span>
               </div>
-              <p className="mt-4 text-slate-300">{card.description}</p>
-              <ul className="mt-6 space-y-2 text-sm text-slate-400">
+              <p className="mb-6 font-neo-body text-lg leading-relaxed">{card.description}</p>
+              <ul className="space-y-3 mb-8 font-neo-body text-sm">
                 {card.highlights.map((point) => (
-                  <li key={point} className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+                  <li key={point} className="flex items-center gap-3">
+                    <span className="w-3 h-3 bg-neo-black group-hover:bg-neo-white border-2 border-neo-black group-hover:border-neo-white"></span>
                     {point}
                   </li>
                 ))}
               </ul>
-              <div className="mt-8 inline-flex items-center gap-2 text-sky-300 font-semibold">
+              <div className="inline-flex items-center gap-2 font-bold uppercase tracking-wider border-b-2 border-neo-black group-hover:border-neo-white pb-1">
                 {card.cta}
-                <span className="transition-transform group-hover:translate-x-1">→</span>
+                <span className="group-hover:translate-x-2 transition-transform">→</span>
               </div>
             </button>
           ))}

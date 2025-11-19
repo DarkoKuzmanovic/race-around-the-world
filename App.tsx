@@ -73,12 +73,12 @@ const App: React.FC = () => {
   const [isLaunchingOnlineGame, setIsLaunchingOnlineGame] = useState(false);
 
   const remoteActionHandlersRef = useRef({
-    readyForQuestion: () => {},
-    answer: (_: boolean) => {},
-    moreInfo: (_question: string, _answer: string) => {},
-    reveal: (_state: QuestionRevealState) => {},
+    readyForQuestion: () => { },
+    answer: (_: boolean) => { },
+    moreInfo: (_question: string, _answer: string) => { },
+    reveal: (_state: QuestionRevealState) => { },
   });
-  const handleResetGameRef = useRef<() => void>(() => {});
+  const handleResetGameRef = useRef<() => void>(() => { });
   const socketRef = useRef<Socket | null>(null);
 
   const isHost = gameMode === 'online' && playerRole === 'host';
@@ -641,8 +641,10 @@ const App: React.FC = () => {
     <>
       {renderGameState()}
       {isLoading && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-          <div className="text-white text-2xl animate-pulse">Fetching new questions...</div>
+        <div className="fixed inset-0 bg-neo-black/80 flex items-center justify-center z-50 backdrop-blur-sm">
+          <div className="bg-neo-white border-neo border-neo-black p-8 shadow-neo-lg animate-bounce">
+            <div className="text-neo-black text-2xl font-neo-display font-bold uppercase">Fetching new questions...</div>
+          </div>
         </div>
       )}
     </>

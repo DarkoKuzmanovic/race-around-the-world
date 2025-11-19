@@ -116,7 +116,7 @@ export const GameBoard: React.FC<GameBoardProps> = ({
     return (
       <g>
         {geoData.features.map((feature: any, i: number) => (
-          <path key={i} d={geoPathGenerator(feature)} className="fill-gray-700 stroke-gray-800" />
+          <path key={i} d={geoPathGenerator(feature)} className="fill-neo-white stroke-neo-black stroke-1" />
         ))}
       </g>
     );
@@ -147,45 +147,44 @@ export const GameBoard: React.FC<GameBoardProps> = ({
   const glowId = 'race-route-glow';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex flex-col items-center justify-center p-4 text-white">
-      <div className="w-full max-w-6xl bg-slate-900/80 border border-slate-800 rounded-3xl shadow-2xl backdrop-blur">
-        <div className="p-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4">
+      <div className="w-full max-w-6xl neo-card relative">
+        <div className="p-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between border-b-4 border-neo-black">
           {onExit && (
-            <button onClick={onExit} className="text-sm text-slate-400 hover:text-white transition-colors w-fit">
+            <button onClick={onExit} className="text-sm font-bold uppercase tracking-widest hover:underline decoration-2 underline-offset-4">
               ← {gameMode === 'online' ? 'Leave room' : 'Change mode'}
             </button>
           )}
           <div className="flex items-center gap-3 flex-wrap">
-            <span className="px-3 py-1 rounded-full text-xs uppercase tracking-[0.4em] bg-slate-800 border border-slate-700">
+            <span className="px-3 py-1 font-bold uppercase tracking-widest bg-neo-black text-neo-white border-2 border-neo-black">
               {gameMode === 'online' ? 'Online room' : 'Local duel'}
             </span>
             {roomCode && (
-              <span className="px-3 py-1 rounded-full text-xs bg-slate-800 border border-slate-700 font-mono tracking-[0.4em]">
+              <span className="px-3 py-1 font-mono font-bold tracking-widest bg-neo-white border-2 border-neo-black">
                 {roomCode}
               </span>
             )}
           </div>
         </div>
 
-        <div className="px-6 pb-6 grid gap-4 md:grid-cols-2">
+        <div className="p-6 grid gap-6 md:grid-cols-2">
           {playerCards.map((player) => (
             <div
               key={player.name}
-              className={`rounded-2xl border ${
-                player.isActive ? 'border-sky-500/70' : 'border-slate-800'
-              } bg-slate-950/60 p-4 transition-colors`}
+              className={`border-4 ${player.isActive ? 'border-neo-black bg-neo-yellow' : 'border-neo-black bg-neo-white'
+                } p-4 transition-colors shadow-neo-sm`}
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs uppercase tracking-widest text-slate-400">{player.isActive ? 'Taking off' : 'Cruising'}</p>
-                  <p className="text-2xl font-semibold">{player.name}</p>
+                  <p className="text-xs font-bold uppercase tracking-widest mb-1">{player.isActive ? 'Taking off' : 'Cruising'}</p>
+                  <p className="text-2xl font-neo-display font-bold uppercase">{player.name}</p>
                 </div>
-                <div className={`w-10 h-10 rounded-full ${player.accent} border border-slate-700`}></div>
+                <div className={`w-10 h-10 border-4 border-neo-black ${player.name === player1Name ? 'bg-neo-blue' : 'bg-neo-red'}`}></div>
               </div>
-              <p className="text-sm text-slate-400 mt-2">{player.location || 'On the move'}</p>
-              <div className="h-1.5 bg-slate-800 rounded-full mt-3">
+              <p className="text-sm font-bold mt-2 border-t-2 border-neo-black pt-2">{player.location || 'On the move'}</p>
+              <div className="h-3 bg-neo-white border-2 border-neo-black mt-3 relative">
                 <div
-                  className={`h-full rounded-full bg-gradient-to-r ${player.color}`}
+                  className={`h-full bg-neo-black transition-all duration-500`}
                   style={{ width: `${player.progress}%` }}
                 ></div>
               </div>
@@ -193,7 +192,7 @@ export const GameBoard: React.FC<GameBoardProps> = ({
           ))}
         </div>
 
-        <div className="bg-slate-900 border-y border-slate-800 relative">
+        <div className="border-y-4 border-neo-black relative bg-neo-blue/10">
           {currentQuestion ? (
             <QuestionDisplay
               question={currentQuestion}
@@ -208,17 +207,17 @@ export const GameBoard: React.FC<GameBoardProps> = ({
               currentPlayerName={currentTurnPlayerName}
             />
           ) : (
-            <div className="p-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="p-6 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
               <div>
-                <p className="text-sm uppercase tracking-[0.4em] text-slate-400">Next stop</p>
-                <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-teal-300">
+                <p className="text-sm font-bold uppercase tracking-[0.4em] mb-2">Next stop</p>
+                <h1 className="text-4xl font-neo-display font-bold uppercase">
                   {currentTurnLocationName}
                 </h1>
-                <p className="text-slate-300 mt-2">It&apos;s {currentTurnPlayerName}&apos;s turn. Tap below to draw a challenge.</p>
+                <p className="mt-2 font-neo-body">It&apos;s <span className="font-bold bg-neo-black text-neo-white px-1">{currentTurnPlayerName}</span>&apos;s turn.</p>
               </div>
               <button
                 onClick={onReadyForQuestion}
-                className="w-full md:w-auto bg-gradient-to-r from-blue-500 to-teal-400 hover:from-blue-600 hover:to-teal-500 text-white font-bold py-3 px-6 rounded-2xl text-md transform hover:scale-105 transition"
+                className="neo-btn neo-btn-primary text-xl w-full md:w-auto"
               >
                 Get Question
               </button>
@@ -226,43 +225,27 @@ export const GameBoard: React.FC<GameBoardProps> = ({
           )}
         </div>
 
-        <div className="relative">
-          <svg width="100%" viewBox={`0 0 ${width} ${height}`}>
-            <defs>
-              <linearGradient id={gradientId} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2={width} y2={0}>
-                <stop offset="0%" stopColor="#38bdf8" />
-                <stop offset="50%" stopColor="#60a5fa" />
-                <stop offset="100%" stopColor="#f472b6" />
-              </linearGradient>
-              <filter id={glowId} x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="6" result="coloredBlur" />
-                <feMerge>
-                  <feMergeNode in="coloredBlur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
+        <div className="relative bg-neo-blue/20 border-b-4 border-neo-black">
+          <svg width="100%" viewBox={`0 0 ${width} ${height}`} className="bg-neo-blue/20">
             {renderMap()}
             {pathSegments.map((segment: string, idx: number) => (
               <g key={`segment-${idx}`}>
                 <path
                   d={segment}
                   fill="none"
-                  stroke="rgba(15,23,42,0.6)"
-                  strokeWidth={6}
+                  stroke="#000000"
+                  strokeWidth={8}
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  opacity={0.45}
                 />
                 <path
                   d={segment}
                   fill="none"
-                  stroke={`url(#${gradientId})`}
-                  strokeWidth={3.5}
+                  stroke="#ffffff"
+                  strokeWidth={4}
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  filter={`url(#${glowId})`}
-                  opacity={0.95}
+                  strokeDasharray="10,10"
                 />
               </g>
             ))}
@@ -273,32 +256,39 @@ export const GameBoard: React.FC<GameBoardProps> = ({
               const isStart = i === 0;
               const isEnd = i === path.length - 1;
               return (
-                <circle
-                  key={loc.name}
-                  cx={cx}
-                  cy={cy}
-                  r={isStart || isEnd ? 6 : 4}
-                  className={isStart ? 'fill-green-400' : isEnd ? 'fill-red-400' : 'fill-blue-400'}
-                  stroke="white"
-                  strokeWidth="1.5"
-                />
+                <g key={loc.name}>
+                  <circle
+                    cx={cx}
+                    cy={cy}
+                    r={8}
+                    className="fill-neo-black"
+                  />
+                  <circle
+                    cx={cx}
+                    cy={cy}
+                    r={isStart || isEnd ? 6 : 4}
+                    className={isStart ? 'fill-neo-green' : isEnd ? 'fill-neo-red' : 'fill-neo-white'}
+                    stroke="black"
+                    strokeWidth="2"
+                  />
+                </g>
               );
             })}
             <g transform={`translate(${player1Coords[0] - 14}, ${player1Coords[1] - 28})`}>
-              <PlayerPin color="#3B82F6" />
+              <PlayerPin color="#54a0ff" />
             </g>
             <g transform={`translate(${player2Coords[0] - 14}, ${player2Coords[1] - 28})`}>
-              <PlayerPin color="#F43F5E" />
+              <PlayerPin color="#FF4D4D" />
             </g>
           </svg>
         </div>
 
-        <div className="p-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="p-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between bg-neo-white">
           <div>
-            <p className="text-xs uppercase tracking-[0.4em] text-slate-400">Current leg</p>
-            <p className="text-lg text-slate-200">{player1Name} vs {player2Name}</p>
+            <p className="text-xs font-bold uppercase tracking-[0.4em]">Current leg</p>
+            <p className="text-lg font-bold">{player1Name} vs {player2Name}</p>
           </div>
-          <p className="text-sm text-slate-400">Answer correctly to advance along the illuminated path.</p>
+          <p className="text-sm font-bold uppercase">Answer correctly to advance.</p>
         </div>
       </div>
     </div>

@@ -105,30 +105,30 @@ export const QuestionDisplay: React.FC<QuestionDisplayProps> = ({
 
   const getButtonClass = (option: string) => {
     if (!showResult) {
-      return `bg-gray-700 ${isInteractive ? 'hover:bg-gray-600' : 'opacity-40 cursor-not-allowed'}`;
+      return `bg-neo-white hover:bg-neo-blue hover:text-neo-white ${!isInteractive ? 'opacity-50 cursor-not-allowed' : ''}`;
     }
     if (option === question.correctAnswer) {
-      return 'bg-green-600';
+      return 'bg-neo-green text-neo-black';
     }
     if (option === selectedAnswer && option !== question.correctAnswer) {
-      return 'bg-red-600';
+      return 'bg-neo-red text-neo-white';
     }
-    return 'bg-gray-700 opacity-50';
+    return 'bg-neo-white opacity-50';
   };
 
   return (
-    <div className="p-4 h-full flex flex-col justify-between">
+    <div className="p-6 h-full flex flex-col justify-between bg-neo-white">
       <div>
-        <h2 className="text-md font-semibold text-blue-300 mb-1">Question for {locationName}</h2>
-        <p className="text-2xl font-bold mb-4 leading-snug">{question.question}</p>
+        <h2 className="text-sm font-bold uppercase tracking-widest mb-2 bg-neo-black text-neo-white inline-block px-2 py-1">Question for {locationName}</h2>
+        <p className="text-3xl font-neo-display font-bold mb-6 leading-tight uppercase">{question.question}</p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {question.options.map((option) => (
             <button
               key={option}
               disabled={!isInteractive || showResult}
               onClick={() => handleSelectAnswer(option)}
-              className={`p-3 rounded-lg text-left text-md transition-all duration-300 ${getButtonClass(option)}`}
+              className={`p-4 border-2 border-neo-black font-bold text-left text-lg transition-all duration-200 shadow-neo-sm ${getButtonClass(option)}`}
             >
               {option}
             </button>
@@ -136,7 +136,7 @@ export const QuestionDisplay: React.FC<QuestionDisplayProps> = ({
         </div>
 
         {!isInteractive && !showResult && (
-          <p className="mt-3 text-sm text-slate-400 italic">
+          <p className="mt-4 text-sm font-bold uppercase animate-pulse">
             Waiting for {currentPlayerName} to answer…
           </p>
         )}
@@ -144,54 +144,54 @@ export const QuestionDisplay: React.FC<QuestionDisplayProps> = ({
 
       <div>
         {isInteractive && !showResult && (
-          <div className="w-full bg-gray-700 rounded-full h-1.5 mt-4" aria-label="Time remaining">
+          <div className="w-full border-2 border-neo-black h-4 mt-6 relative">
             <div
-              className="bg-gradient-to-r from-blue-400 to-teal-300 h-1.5 rounded-full transition-all duration-100 ease-linear"
+              className="bg-neo-black h-full transition-all duration-100 ease-linear"
               style={{ width: `${timerWidthPercent}%` }}
             />
           </div>
         )}
 
         {showResult && (
-          <div className="mt-4 space-y-4">
-            <div className="text-center space-y-1">
-              <h3 className={`text-2xl font-bold ${isCorrect ? 'text-green-400' : 'text-red-400'}`}>
+          <div className="mt-6 space-y-6">
+            <div className="text-center border-2 border-neo-black p-4 bg-neo-yellow shadow-neo">
+              <h3 className={`text-4xl font-neo-display font-bold uppercase ${isCorrect ? 'text-neo-black' : 'text-neo-red'}`}>
                 {isCorrect ? 'Correct!' : 'Incorrect!'}
               </h3>
               {!isCorrect && (
-                <p className="text-gray-300">The correct answer was: {question.correctAnswer}</p>
+                <p className="font-bold mt-2">The correct answer was: <span className="underline decoration-4 decoration-neo-green">{question.correctAnswer}</span></p>
               )}
               {timedOut && !isCorrect && (
-                <p className="text-gray-400 text-sm">Time ran out on this question.</p>
+                <p className="font-bold uppercase text-sm mt-2">Time ran out!</p>
               )}
             </div>
 
-            <div className="rounded-2xl border border-slate-800/70 bg-slate-900/40 p-4 space-y-3">
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div className="border-2 border-neo-black p-4 bg-neo-white shadow-neo-sm">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-4 border-b-2 border-neo-black pb-2">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Learn more</p>
-                  <p className="text-sm text-slate-300">
+                  <p className="text-xs font-bold uppercase tracking-widest bg-neo-black text-neo-white inline-block px-1">Learn more</p>
+                  <p className="text-sm font-bold mt-1">
                     {moreInfo ? 'Shared fact for both players.' : isInteractive ? 'Reveal a bonus fact for the room.' : `${currentPlayerName} can reveal a bonus fact.`}
                   </p>
                 </div>
                 {isInteractive && showMoreInfoButton && !moreInfo && !isMoreInfoLoading && (
                   <button
                     onClick={handleMoreInfoClick}
-                    className="bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2 px-4 rounded-lg transition"
+                    className="neo-btn neo-btn-secondary text-sm py-2 px-4"
                   >
                     Learn More
                   </button>
                 )}
               </div>
-              <div className="min-h-[72px] rounded-xl border border-slate-800/60 bg-slate-950/50 p-3 text-left">
+              <div className="min-h-[72px]">
                 {isMoreInfoLoading && (
-                  <p className="text-gray-300 animate-pulse text-sm">Fetching interesting facts…</p>
+                  <p className="font-bold animate-pulse">Fetching interesting facts…</p>
                 )}
                 {!isMoreInfoLoading && moreInfo && (
-                  <p className="text-sm text-slate-200 leading-relaxed">{moreInfo}</p>
+                  <p className="font-neo-body text-sm leading-relaxed">{moreInfo}</p>
                 )}
                 {!isMoreInfoLoading && !moreInfo && (
-                  <p className="text-sm text-slate-500 italic">No bonus fact yet.</p>
+                  <p className="text-sm italic text-gray-500">No bonus fact yet.</p>
                 )}
               </div>
             </div>
@@ -199,12 +199,12 @@ export const QuestionDisplay: React.FC<QuestionDisplayProps> = ({
             {isInteractive ? (
               <button
                 onClick={() => onAnswer(isCorrect)}
-                className="w-full md:w-auto bg-gradient-to-r from-blue-500 to-teal-400 hover:from-blue-600 hover:to-teal-500 text-white font-bold py-2 px-5 rounded-lg text-lg transform hover:scale-105 transition-transform duration-300"
+                className="neo-btn neo-btn-primary w-full text-xl"
               >
                 Continue
               </button>
             ) : (
-              <p className="text-sm text-slate-400 text-center italic">Waiting for {currentPlayerName} to continue…</p>
+              <p className="text-sm font-bold uppercase text-center animate-pulse">Waiting for {currentPlayerName} to continue…</p>
             )}
           </div>
         )}
