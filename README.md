@@ -42,7 +42,7 @@ The game features:
 1. **Clone the repository**
 
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/DarkoKuzmanovic/race-around-the-world
    cd race-around-the-world
    ```
 
@@ -69,6 +69,34 @@ The game features:
    ```
 
    The server listens on port `4000` by default. Leave it running while you play online games.
+
+   If you see an error like `EADDRINUSE` and the server fails to start, another process is occupying the port. Two simple options:
+
+   - Change the port for this run (PowerShell):
+
+     ```powershell
+     # Temporarily run the server on port 4001 for this session
+     $env:PORT = 4001
+     npm run server
+     ```
+
+   - Kill the process that is using the port (PowerShell):
+
+     ```powershell
+     # Find the PID listening on port 4000
+     netstat -ano | findstr :4000
+
+     # Suppose the PID is 1234, kill it
+     Stop-Process -Id 1234 -Force
+     ```
+
+   Note: The server now includes a fallback attempt — if port 4000 is busy it will automatically try the next port(s). If your server starts on a port other than 4000, set `VITE_SOCKET_URL` so the web client connects to the correct realtime server, e.g.:
+
+   ```powershell
+   $env:PORT = 4001
+   $env:VITE_SOCKET_URL = "http://localhost:4001"
+   npm run dev:full
+   ```
 
 5. **Run the Vite development server**
 

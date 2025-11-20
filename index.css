@@ -5,6 +5,13 @@
 @layer base {
   body {
     @apply antialiased;
+    background-color: #ffde00;
+    background-image: linear-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.1)),
+      url("/resources/background.png");
+    background-repeat: repeat;
+    background-attachment: fixed;
+    background-size: auto;
+    background-blend-mode: overlay;
   }
 
   /* Custom Scrollbar */

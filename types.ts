@@ -1,4 +1,3 @@
-
 export interface Location {
   name: string;
   coordinates: [number, number]; // [longitude, latitude]
@@ -17,12 +16,18 @@ export interface QuestionRevealState {
   timedOut: boolean;
 }
 
-export type GameState = 'landing' | 'setup' | 'onlineLobby' | 'playing' | 'finished';
+export type GameState =
+  | "landing"
+  | "setup"
+  | "onlineLobby"
+  | "playing"
+  | "finished";
 
-export type GameMode = 'local' | 'online';
+export type GameMode = "local" | "online";
 
 export interface LobbyPlayer {
   id: string;
   name: string;
-  role: 'host' | 'guest';
+  avatarId: string;
+  role: "host" | "guest";
 }

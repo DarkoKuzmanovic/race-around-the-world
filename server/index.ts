@@ -1,32 +1,33 @@
-import cors from 'cors';
-import dotenv from 'dotenv';
-import express from 'express';
-import { createServer } from 'http';
-import { Server, Socket } from 'socket.io';
+import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
+import { createServer } from "http";
+import { Server, Socket } from "socket.io";
 
 dotenv.config();
 
 const app = express();
 app.use(cors());
 
-app.get('/', (_req, res) => {
-  res.json({ status: 'ok', message: 'Race Around The World realtime server' });
+app.get("/", (_req, res) => {
+  res.json({ status: "ok", message: "Race Around The World realtime server" });
 });
 
 const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.CLIENT_ORIGIN || '*',
-    methods: ['GET', 'POST'],
+    origin: process.env.CLIENT_ORIGIN || "*",
+    methods: ["GET", "POST"],
   },
 });
 
-type PlayerRole = 'host' | 'guest';
+type PlayerRole = "host" | "guest";
 
 interface RoomPlayer {
   id: string;
   name: string;
+  avatarId: string;
   role: PlayerRole;
   joinedAt: number;
 }
@@ -45,14 +46,14 @@ const MAX_PLAYERS = 2;
 
 const logRoomsSnapshot = () => {
   const codes = [...rooms.keys()];
-  console.log(`[socket] active rooms: ${codes.length ? codes.join(', ') : 'none'}`);
+  console.log(`[socket] active rooms: ${codes.length ? codes.join(", ") : "none"}`);
 };
 
 const generateRoomCode = (): string => {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let attempt = '';
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let attempt = "";
   do {
-    attempt = Array.from({ length: 5 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    attempt = Array.from({ length: 5 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
   } while (rooms.has(attempt));
   return attempt;
 };
@@ -74,7 +75,7 @@ const removeSocketFromRoom = (socket: Socket): void => {
 
   if (socket.id === hostId) {
     console.log(`[socket] host ${socket.id} closed room ${code}`);
-    io.to(code).emit('room:closed');
+    io.to(code).emit("room:closed");
     Object.keys(room.players).forEach((playerId) => {
       const targetSocket = io.sockets.sockets.get(playerId);
       targetSocket?.leave(code);
@@ -86,18 +87,18 @@ const removeSocketFromRoom = (socket: Socket): void => {
   }
 
   console.log(`[socket] ${socket.id} left room ${code}`);
-  io.to(code).emit('room:update', {
+  io.to(code).emit("room:update", {
     code,
     players: Object.values(room.players),
   });
   logRoomsSnapshot();
 };
 
-io.on('connection', (socket) => {
+io.on("connection", (socket) => {
   console.log(`[socket] ${socket.id} connected`);
-  socket.on('createRoom', ({ name }: { name: string }) => {
-    if (!name || typeof name !== 'string') {
-      socket.emit('room:error', 'Please provide a display name.');
+  socket.on("createRoom", ({ name, avatarId }: { name: string; avatarId: string }) => {
+    if (!name || typeof name !== "string") {
+      socket.emit("room:error", "Please provide a display name.");
       console.warn(`[socket] ${socket.id} attempted to create a room without a valid name`);
       return;
     }
@@ -110,7 +111,8 @@ io.on('connection', (socket) => {
     const player: RoomPlayer = {
       id: socket.id,
       name: name.trim(),
-      role: 'host',
+      avatarId: avatarId || "male1", // Use provided avatarId or default
+      role: "host",
       joinedAt: Date.now(),
     };
 
@@ -125,31 +127,34 @@ io.on('connection', (socket) => {
     socketToRoom.set(socket.id, code);
     socket.join(code);
 
-    socket.emit('room:created', { code, player });
-    socket.emit('room:update', { code, players: Object.values(room.players) });
+    socket.emit("room:created", { code, player });
+    socket.emit("room:update", {
+      code,
+      players: Object.values(room.players),
+    });
     console.log(`[socket] ${socket.id} created room ${code} as ${player.name}`);
     logRoomsSnapshot();
   });
 
-  socket.on('joinRoom', ({ code, name }: { code: string; name: string }) => {
+  socket.on("joinRoom", ({ code, name, avatarId }: { code: string; name: string; avatarId: string }) => {
     const normalizedCode = code?.toUpperCase();
     const room = rooms.get(normalizedCode);
 
     if (!normalizedCode || !room) {
-      socket.emit('room:error', 'Room not found. Double-check the code.');
-      console.warn(`[socket] ${socket.id} failed to join room ${normalizedCode || '<empty>'}: not found`);
+      socket.emit("room:error", "Room not found. Double-check the code.");
+      console.warn(`[socket] ${socket.id} failed to join room ${normalizedCode || "<empty>"}: not found`);
       return;
     }
 
     const playerCount = Object.keys(room.players).length;
     if (playerCount >= MAX_PLAYERS) {
-      socket.emit('room:error', 'This room is already full.');
+      socket.emit("room:error", "This room is already full.");
       console.warn(`[socket] ${socket.id} tried to join room ${normalizedCode}: room full`);
       return;
     }
 
-    if (!name || typeof name !== 'string') {
-      socket.emit('room:error', 'Please provide a display name.');
+    if (!name || typeof name !== "string") {
+      socket.emit("room:error", "Please provide a display name.");
       console.warn(`[socket] ${socket.id} attempted to join room ${normalizedCode} without a valid name`);
       return;
     }
@@ -160,14 +165,15 @@ io.on('connection', (socket) => {
     const player: RoomPlayer = {
       id: socket.id,
       name: name.trim(),
-      role: 'guest',
+      avatarId: avatarId || "female1", // Use provided avatarId or default
+      role: "guest",
       joinedAt: Date.now(),
     };
 
     room.players[socket.id] = player;
 
-    socket.emit('room:joined', { code: normalizedCode, player });
-    io.to(normalizedCode).emit('room:update', {
+    socket.emit("room:joined", { code: normalizedCode, player });
+    io.to(normalizedCode).emit("room:update", {
       code: normalizedCode,
       players: Object.values(room.players),
     });
@@ -175,33 +181,33 @@ io.on('connection', (socket) => {
     logRoomsSnapshot();
   });
 
-  socket.on('leaveRoom', () => {
+  socket.on("leaveRoom", () => {
     console.log(`[socket] ${socket.id} requested to leave their room`);
     removeSocketFromRoom(socket);
   });
 
-  socket.on('client:action', (payload) => {
+  socket.on("client:action", (payload) => {
     const room = getRoomBySocket(socket.id);
     if (!room) return;
     const targetHost = io.sockets.sockets.get(room.hostId);
     if (!targetHost) return;
-    console.log(`[socket] relaying action ${payload?.type ?? 'unknown'} from ${socket.id} to host ${room.hostId}`);
-    targetHost.emit('room:action', {
+    console.log(`[socket] relaying action ${payload?.type ?? "unknown"} from ${socket.id} to host ${room.hostId}`);
+    targetHost.emit("room:action", {
       from: socket.id,
       payload,
     });
   });
 
-  socket.on('host:state', (state) => {
+  socket.on("host:state", (state) => {
     const room = getRoomBySocket(socket.id);
     if (!room || room.hostId !== socket.id) {
       return;
     }
     console.log(`[socket] host ${socket.id} broadcast state for room ${room.code}`);
-    socket.to(room.code).emit('state:sync', state);
+    socket.to(room.code).emit("state:sync", state);
   });
 
-  socket.on('disconnect', () => {
+  socket.on("disconnect", () => {
     console.log(`[socket] ${socket.id} disconnected`);
     removeSocketFromRoom(socket);
   });
@@ -209,6 +215,31 @@ io.on('connection', (socket) => {
 
 const PORT = Number(process.env.PORT || 4000);
 
-httpServer.listen(PORT, () => {
-  console.log(`Realtime server listening on port ${PORT}`);
-});
+/**
+ * Try to bind the HTTP server to a port. If the port is already in use, try the
+ * next port until a maximum number of attempts is reached.
+ */
+const startServer = (basePort: number, maxAttempts = 10) => {
+  let attemptsLeft = maxAttempts;
+
+  const attempt = (portToTry: number) => {
+    const server = httpServer.listen(portToTry, () => {
+      console.log(`Realtime server listening on port ${portToTry}`);
+    });
+
+    server.once("error", (err: any) => {
+      if (err && err.code === "EADDRINUSE" && attemptsLeft > 0) {
+        console.warn(`[server] Port ${portToTry} is already in use — trying ${portToTry + 1}...`);
+        attemptsLeft -= 1;
+        attempt(portToTry + 1);
+      } else {
+        console.error(err || "Failed to bind to port");
+        process.exit(1);
+      }
+    });
+  };
+
+  attempt(basePort);
+};
+
+startServer(PORT, 10);
